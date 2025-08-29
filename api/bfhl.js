@@ -1,28 +1,23 @@
-export default function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ is_success: false, message: 'Method Not Allowed' });
+import { json } from "express";
+
+// Since Vercel Serverless Functions don't use `app.listen`, we export a default handler
+export default async function handler(req, res) {
+  // Only accept POST requests
+  if (req.method !== "POST") {
+    return res.status(405).json({ is_success: false, message: "Method Not Allowed" });
   }
 
   try {
-    // ✅ Your details
-    const fullName = "christeen_k_denny";
-    const dob = "07072004";
-    const email = "cd072004@gmail.com";
-    const rollNumber = "22BCE3032";
-
-    // 🔹 Helper: alternating caps reverse concat
-    const alternateCapsReverse = (arr) => {
-      const alphabets = arr.join("").split("").reverse();
-      return alphabets
-        .map((ch, i) => (i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()))
-        .join("");
-    };
-
     const data = req.body.data;
 
     if (!Array.isArray(data)) {
       return res.status(400).json({ is_success: false, message: "Invalid input" });
     }
+
+    const fullName = "christeen_k_denny";
+    const dob = "07072004";
+    const email = "cd072004@gmail.com";
+    const rollNumber = "22BCE3032";
 
     const odd_numbers = [];
     const even_numbers = [];
@@ -43,7 +38,13 @@ export default function handler(req, res) {
       }
     });
 
-    const concat_string = alternateCapsReverse(alphabets);
+    // Concatenate alphabets in reverse order with alternating caps
+    const concat_string = alphabets
+      .join("")
+      .split("")
+      .reverse()
+      .map((ch, i) => (i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()))
+      .join("");
 
     res.status(200).json({
       is_success: true,
