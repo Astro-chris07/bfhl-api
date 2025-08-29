@@ -1,37 +1,21 @@
 // api/bfhl.js
-import { json } from "micro";
 
-export const config = {
-  api: {
-    bodyParser: true,
-  },
-};
-
-const fullName = "christeen_k_denny"; // lowercase full name with underscores
-const dob = "07072004";                // ddmmyyyy
-const email = "cd072004@gmail.com";
-const rollNumber = "22BCE3032";
-
-// Helper: alternating caps reverse concat
-function alternateCapsReverse(arr) {
-  const alphabets = arr.join("").split("").reverse();
-  return alphabets
-    .map((ch, i) => (i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()))
-    .join("");
-}
-
-export default async function handler(req, res) {
+export default function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ is_success: false, message: "Method Not Allowed" });
   }
 
   try {
-    const body = req.body;
-    const data = body.data;
+    const data = req.body.data;
 
     if (!Array.isArray(data)) {
       return res.status(400).json({ is_success: false, message: "Invalid input" });
     }
+
+    const fullName = "christeen_k_denny";
+    const dob = "07072004";
+    const email = "cd072004@gmail.com";
+    const rollNumber = "22BCE3032";
 
     const odd_numbers = [];
     const even_numbers = [];
@@ -52,7 +36,13 @@ export default async function handler(req, res) {
       }
     });
 
-    const concat_string = alternateCapsReverse(alphabets);
+    // alternating caps reverse helper
+    const concat_string = alphabets
+      .join("")
+      .split("")
+      .reverse()
+      .map((ch, i) => (i % 2 === 0 ? ch.toUpperCase() : ch.toLowerCase()))
+      .join("");
 
     res.status(200).json({
       is_success: true,
@@ -67,6 +57,7 @@ export default async function handler(req, res) {
       concat_string,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ is_success: false, message: "Server error" });
   }
 }
